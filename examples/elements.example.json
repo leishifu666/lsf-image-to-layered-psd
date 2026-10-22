@@ -1,0 +1,18 @@
+[
+  {
+    "id": "R00",
+    "prompt": "只重建去掉前景后的完整背景，保持原图纹理与构图",
+    "images": [
+      "reference.png"
+    ],
+    "transparent": false
+  },
+  {
+    "id": "R01",
+    "prompt": "只提取并修复原图指定主体，保持形状材质，补全遮挡并输出真实透明背景",
+    "images": [
+      "reference.png"
+    ],
+    "transparent": true
+  }
+]

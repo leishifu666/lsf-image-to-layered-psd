@@ -1,0 +1,8 @@
+{
+  "protocol": "openai-images",
+  "base_url": "https://api.example.invalid/v1",
+  "model": "REPLACE_WITH_SUPPORTED_MODEL_ID",
+  "api_key_env": "LSF_IMAGE_API_KEY",
+  "timeout_seconds": 180,
+  "parameters": {}
+}

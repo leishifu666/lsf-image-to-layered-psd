@@ -1,0 +1,18 @@
+{
+  "name": "lsf-image-to-layered-psd",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Open-source Photoshop layered reconstruction skill",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node tests/validate-package.cjs && node --test tests/element-pool.test.cjs"
+  },
+  "dependencies": {
+    "ag-psd": "31.0.3",
+    "@napi-rs/canvas": "1.0.11",
+    "fontkit": "2.0.4"
+  }
+}

@@ -1,0 +1,23 @@
+name: Package checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -r requirements.txt
+      - run: node tests/validate-package.cjs
+      - run: node --test tests/element-pool.test.cjs
+      - run: python -m unittest discover -s tests -p 'test_*.py'
+      - run: node --check scripts/build-editable-psd.cjs
+      - run: node --check scripts/test-editable-psd.cjs

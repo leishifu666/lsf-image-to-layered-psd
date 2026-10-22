@@ -1,0 +1,4 @@
+interface:
+  display_name: "图片拆层 · PS 普通版"
+  short_description: "重建分层PSD与原生可编辑文字；核验字体，提供候选对比图，交付独立素材与完整背景"
+  default_prompt: "使用 $lsf-image-to-layered-psd 处理我上传的图片并输出分层 PSD，普通文字保留原生编辑；未指定尺寸时先让我选择，未知字体提供候选同文对比图，获同意后应用并保存验证。"

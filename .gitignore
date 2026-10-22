@@ -1,0 +1,14 @@
+node_modules/
+work/
+outputs/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+*.local.json
+*.log
+api-recovery/
+.DS_Store
+Thumbs.db
