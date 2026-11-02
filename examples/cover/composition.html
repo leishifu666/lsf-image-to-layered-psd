@@ -1,0 +1,151 @@
+<template id="layer-cover-a">
+<style>
+:host{
+  --lei-blue:#0880f7;
+  --ink:#252525;
+  --font-cn:"PingFang SC","Microsoft YaHei",sans-serif;
+  --font-en:"Albert Sans","PingFang SC","Microsoft YaHei",sans-serif;
+  --ease:cubic-bezier(.2,.7,.2,1);
+  --dur:.8s;
+display:block;position:relative;width:100%;height:100%;aspect-ratio:3/2;overflow:hidden;pointer-events:none;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+.cover{
+  position:absolute;left:0;top:0;width:1500px;height:1000px;
+  transform:scale(var(--s,1));transform-origin:0 0;overflow:hidden;
+}
+.stage{position:absolute;transform-style:preserve-3d}
+.stack{
+  position:absolute;transform-style:preserve-3d;
+  transition:transform var(--dur) var(--ease);
+}
+.plane{
+  position:absolute;inset:0;transform-style:preserve-3d;
+  /* 展开：各平面 translate3d(--tx,--ty,--tz)；合拢：仅保留 --i px 防止共面闪烁 */
+  transform:translate3d(var(--tx,0px),var(--ty,0px),var(--tz,0px));
+  transition:transform var(--dur) var(--ease);
+}
+.plane img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;
+  transition:filter var(--dur) var(--ease);
+}
+/* Let the real alpha layers define the silhouette, without glass panels. */
+.plane.sheet::before{content:none}
+.cover[data-state="collapsed"] .plane{transform:translate3d(0,0,calc(var(--i) * 1px))}
+.cover[data-state="collapsed"] .plane.sheet::before{opacity:0}
+.cover[data-state="collapsed"] .plane img{filter:none}
+
+/* 背景平面厚度：右侧一条 6px 侧边 */
+.plane-bg::after{
+  content:"";position:absolute;top:0;left:100%;width:6px;height:100%;
+  transform-origin:0 50%;transform:rotateY(90deg);
+}
+
+/* 平面分组顺序 --i（后→前）
+   1 背景 02
+   2 右黑栏 + 分隔线 10、11
+   3 人物 01
+   4 ADA + 引言 03、04
+   5 Afterimage 主标题 05
+   6 其他文字 06、07、08、09 */
+
+/* ==========================================================
+   A 版：浅色外底 + 右侧近黑艺术区
+   ========================================================== */
+.cover-a{background:#f6f6f4}
+.cover-a .copy{position:absolute;left:96px;top:0;width:470px;height:1000px}
+.lockup{display:flex;align-items:center;gap:12px;width:max-content}
+.lockup img:first-child{width:34px;height:34px;object-fit:contain}
+.lockup img:last-child{width:148px;height:auto}
+.cover-a .lockup{position:absolute;left:0;top:92px;height:34px}
+.cover-a .title{position:absolute;left:0;top:372px;margin:0;
+  font:600 104px/1 var(--font-cn);letter-spacing:.02em;color:var(--ink);white-space:nowrap}
+.cover-a .title small{font:500 30px/1 var(--font-en);letter-spacing:.02em;color:var(--lei-blue);
+  margin-left:14px;vertical-align:top;position:relative;top:6px}
+.cover-a .tagline{position:absolute;left:2px;top:516px;margin:0;
+  font:400 26px/1.4 var(--font-cn);color:#595959;white-space:nowrap}
+.cover-a .formats{position:absolute;left:2px;bottom:92px;margin:0;
+  font:500 15px/1 var(--font-en);letter-spacing:.14em;color:#8c8c8c}
+
+/* 艺术区：x 620–1460，y 40–960 */
+.cover-a .art{
+  position:absolute;left:620px;top:40px;width:840px;height:920px;border-radius:28px;overflow:hidden;
+  background:
+    radial-gradient(60% 50% at 62% 34%, rgba(70,104,160,.30), rgba(0,0,0,0) 70%),
+    radial-gradient(90% 70% at 50% 100%, rgba(0,0,0,.6), rgba(0,0,0,0) 60%),
+    #0c0d10;
+  perspective:2400px;perspective-origin:52% 44%;
+}
+.cover-a .art::after{ /* 细颗粒质感 */
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.10;mix-blend-mode:screen;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+/* 地面接触阴影 + 冷色反光 */
+.cover-a .floor{position:absolute;left:150px;top:770px;width:560px;height:90px;border-radius:50%;
+  background:radial-gradient(closest-side, rgba(0,0,0,.85), rgba(0,0,0,0));filter:blur(6px)}
+.cover-a .floor-glow{position:absolute;left:120px;top:740px;width:640px;height:160px;border-radius:50%;
+  background:radial-gradient(closest-side, rgba(80,120,190,.16), rgba(0,0,0,0))}
+
+/* 海报尺寸：高 640 → 宽 452（1054:1492） */
+.cover-a .stage{left:0;top:0;width:840px;height:920px}
+.cover-a .stack{left:250px;top:130px;width:452px;height:640px;
+  transform:rotateX(6deg) rotateY(-32deg)}
+.cover-a[data-state="collapsed"] .stack{transform:rotateX(4deg) rotateY(-16deg)}
+
+/* A 展开坐标（px） */
+.cover-a .p1{--tx:0px;  --ty:0px;  --tz:0px}
+.cover-a .p2{--tx:28px; --ty:0px;  --tz:70px}
+.cover-a .p3{--tx:0px;  --ty:0px;  --tz:150px}
+.cover-a .p4{--tx:-14px;--ty:-16px;--tz:230px}
+.cover-a .p5{--tx:-20px;--ty:10px; --tz:300px}
+.cover-a .p6{--tx:-28px;--ty:0px;  --tz:360px}
+
+.cover-a .plane-bg{box-shadow:0 40px 80px rgba(0,0,0,.55)}
+.cover-a .plane-bg::after{background:linear-gradient(#1a2433,#06090f)}
+.cover-a .p3 img{filter:drop-shadow(-16px 22px 26px rgba(0,0,0,.5))}
+.cover-a .p4 img,.cover-a .p5 img,.cover-a .p6 img{filter:drop-shadow(0 10px 16px rgba(0,0,0,.35))}
+
+
+.stack,.plane,.plane img{transition:none}
+.cover-en .title{font-family:var(--font-en);font-size:80px;letter-spacing:0}
+.cover-en .tagline{font-family:var(--font-en);font-size:25px}
+</style>
+<section class="cover cover-a" data-variant="a" data-state="exploded" aria-hidden="true">
+      <div class="copy">
+        <div class="lockup" role="img" aria-label="Lei Skills"><img src="./brand/lei-symbol.svg" alt=""><img src="./brand/lei-wordmark.svg" alt=""></div>
+        <div class="title">图层拆分<small>Skill</small></div>
+        <p class="tagline">把图片，拆成可编辑的图层</p>
+        <p class="formats">Photoshop / PSD</p>
+      </div>
+      <div class="art">
+        <div class="floor-glow"></div>
+        <div class="floor"></div>
+        <div class="stage">
+          <div class="stack">
+            <div class="plane plane-bg p1" style="--i:1">
+              <img src="./02-background.png" alt="">
+            </div>
+            <div class="plane sheet p2" style="--i:2">
+              <img src="./10-sidebar.png" alt="">
+              <img src="./11-divider.png" alt="">
+            </div>
+            <div class="plane sheet p3" style="--i:3">
+              <img src="./01-subject.png" alt="">
+            </div>
+            <div class="plane sheet p4" style="--i:4">
+              <img src="./03-ada.png" alt="">
+              <img src="./04-quote.png" alt="">
+            </div>
+            <div class="plane sheet p5" style="--i:5">
+              <img src="./05-afterimage.png" alt="">
+            </div>
+            <div class="plane sheet p6" style="--i:6">
+              <img src="./06-night-trace.png" alt="">
+              <img src="./07-portrait-study.png" alt="">
+              <img src="./08-footer.png" alt="">
+              <img src="./09-signature.png" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+</template>
