@@ -1,5 +1,7 @@
 # 图片拆层 · PS 普通版
 
+[![XERJ Corpus Hub contributor](https://hub.xerj.org/contributors/leishifu666/badge.svg)](https://hub.xerj.org/contributors/leishifu666)
+
 把一张图片重建为可以继续修改的 Photoshop 分层 PSD。
 
 普通版免费开源，包含原生文字编辑；Figma 重建与专属流程不在本仓库中。这里发布的是独立的 PS 版本，不携带私人总仓库或其他版本的历史。
